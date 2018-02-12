@@ -30,3 +30,15 @@
 *.exe
 *.out
 *.app
+**/bin
+
+#CMake
+**/CMakeFiles
+*.cmake
+**/CMakeCache.txt
+**/Makefile
+
+#Eclipse
+.cproject
+.project
+.settings
