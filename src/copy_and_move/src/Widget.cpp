@@ -3,28 +3,30 @@
 #include "Foo.hpp"
 
 
-Widget::Widget(const std::string& iName): _name(iName) {
-  std::cout << "Call constructor" << std::endl;
-  _foo = new Foo("test Foo");
+Widget::Widget(int iValue): _value(iValue) {
+  std::string fooName = "test Foo";
+  std::cout << "Call Widget constructor: _value = " << iValue << ", _foo name = " << fooName << std::endl;
+  _foo = new Foo(fooName);
 }
 
-// Default copy means -> copy all data member
-Widget::Widget(const Widget& iWidget): _name(iWidget.getName()) {
+Widget::Widget(const Widget& iWidget): _value(iWidget.getValue()) {
   _foo = new Foo(iWidget.getFooName());
-  std::cout << "Call copy constructor";
+  std::cout << "Call Widget copy constructor" << std::endl;
 }
 
-Widget::Widget(Widget&& iWidget): _name(iWidget.getName()),_foo(iWidget.getFoo()) {
-  iWidget._name = "";
+Widget::Widget(Widget&& iWidget): _value(iWidget._value),_foo(iWidget._foo) {
+  iWidget._value = 0;
   iWidget._foo = nullptr;
-  std::cout << "Call the move constructor";
+  std::cout << "Call Widget move constructor" << std::endl;
 }
 
 Widget::~Widget() {
-  std::cout << std::endl << "Call Widget destructor" << std::endl;
+  std::cout << "Call Widget destructor... ";
   if (_foo != nullptr) {
-    std::cout << "_foo is not empty, delete _foo" << std::endl << std::endl;
+    std::cout << "_foo is not empty, delete _foo" << std::endl;
     delete _foo;
+  } else {
+    std::cout << "_foo is empty." << std::endl;
   }
 }
 
@@ -33,7 +35,7 @@ std::string Widget::getFooName() const {
   if (_foo != nullptr) {
     aFooName = _foo->getName();
   } else {
-    aFooName = "foo is empty!";
+    aFooName = "_foo points to no object";
   }
   return aFooName;
 }

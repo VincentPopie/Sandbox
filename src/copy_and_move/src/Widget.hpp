@@ -3,21 +3,48 @@
 #include<string>
 
 class Foo;
+
+/*
+ * Class Widget containing a nacked pointer to a Foo object
+ */
 class Widget {
 
 public:
-  Widget(const std::string& iName, Foo* iFoo): _name(iName), _foo(iFoo) {}
-  Widget(const Widget& iWidget);
-  Widget(Widget&& iWidget);
-  explicit Widget(const std::string& iName);
 
+  /*
+   * Widget Constructor. Set the _value attribute.
+   */
+  explicit Widget(int iValue);
+
+  /*
+   * Widget copy constructor. Copy the object pointed by _foo.
+   */
+  Widget(const Widget& iWidget);
+
+  /*
+   * Widget move constructor. Move the object pointed by _foo and let the parameter in a safe state.
+   */
+  Widget(Widget&& ioWidget);
+
+
+  /*
+   * Widget destructor. Delete the Foo object pointed by _foo.
+   */
   ~Widget();
-  std::string getName() const { return _name;}
-  Foo* getFoo() const {return _foo;}
+
+  /*
+   * Return the _value content.
+   */
+  int getValue() const { return _value;}
+
+
+  /*
+   * Return the _name parameter in Foo object pointed by _foo
+   */
   std::string getFooName() const;
 
 private:
-  std::string _name;
+  int _value;
   Foo* _foo;
 };
 

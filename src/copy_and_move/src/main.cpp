@@ -5,25 +5,37 @@
 #include"SmartWidget.hpp"
 #include"Widget.hpp"
 
-Widget generateWidget (int i) {
+Widget generateWidgetAvoidingRVO (int i) {
 
   std::cout << "Begin generate Widget..." << std::endl;
-  Widget aWidget("test generate");
+  Widget aWidget(1);
 
   // To avoid RVO
   if (i%2 == 0) {
-    std::cout << "Generate Widget before return..." << std::endl;
+    std::cout << "End generate Widget (before return)..." << std::endl;
     return aWidget;
   }
 
-  return Widget("test generate bis");
+  std::cout << "End generate Widget (before return)..." << std::endl;
+  return Widget(2);
 }
 
+void testWidgetCopyMove() {
+
+  std::cout << std::endl << std::endl << "Begin test copyable and movable Widget..." << std::endl << std::endl;
+
+  Widget aWidget = generateWidgetAvoidingRVO(2);
+
+  std::cout << std::endl << "Verify Widget content in the 'main' function: " << std::endl;
+  std::cout << "Widget Name: " << aWidget.getValue() << std::endl
+      << "Widget Foo Name: " << aWidget.getFooName() << std::endl;
+  std::cout << "End test copyable and movable Widget..." << std::endl;
+}
 
 
 SmartWidget generateSmartWidget (int i) {
 
-  std::cout << "Begin generate SmartWidget..." << std::endl;
+  std::cout << std::endl << std::endl << "Begin generate SmartWidget..." << std::endl;
   SmartWidget aSmartWidget("test generate");
 
   // To avoid RVO
@@ -40,11 +52,8 @@ SmartWidget generateSmartWidget (int i) {
 
 int main() {
 
+  testWidgetCopyMove();
 
-  Widget aWidget = generateWidget(2);
-
-  std::cout << "Widget Name: " << aWidget.getName() << std::endl
-      << "Widget Foo Name: " << aWidget.getFooName() << std::endl << std::endl << std::endl;
 
 
   SmartWidget aSmartWidget = generateSmartWidget(2);
