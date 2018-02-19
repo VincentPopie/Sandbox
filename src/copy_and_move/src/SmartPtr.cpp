@@ -18,9 +18,12 @@ SmartPtr::SmartPtr(SmartPtr&& aMove) {
 SmartPtr::~SmartPtr(){
   std::cout << "Call SmartPtr destructor...";
   if (_foo != nullptr) {
-    std::cout << "Foo is not null, it will be destructed" << std::endl;
+    std::cout << " foo is not null, it will be destructed" << std::endl;
     delete _foo;
+  } else {
+    std::cout << " foo is null" << std::endl;
   }
+
 }
 
 SmartPtr& SmartPtr::operator= (SmartPtr&& aMove) {

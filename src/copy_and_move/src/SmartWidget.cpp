@@ -4,9 +4,10 @@
 #include "Foo.hpp"
 
 
-SmartWidget::SmartWidget(const std::string& iName): _name(iName) {
-  std::cout << "Call SmartWudget constructor" << std::endl;
-  _foo = SmartPtr(new Foo("test Foo"));
+SmartWidget::SmartWidget(int iValue): _value(iValue) {
+  std::string fooName = "test Foo";
+  std::cout << "Call SmartWidget constructor: _value = " << iValue << ", _foo name = " << fooName << std::endl;
+  _foo = SmartPtr(new Foo(fooName));
 }
 
 
