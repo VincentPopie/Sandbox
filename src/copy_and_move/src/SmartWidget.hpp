@@ -25,7 +25,7 @@ public:
 
 private:
   int _value;
-  SmartPtr _foo;
+  SmartPtr<Foo> _foo;
 };
 
 

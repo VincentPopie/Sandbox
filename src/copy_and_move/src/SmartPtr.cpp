@@ -1,7 +1,6 @@
 #include "SmartPtr.hpp"
 
 #include<iostream>
-#include "Foo.hpp"
 
 //Shared ownership - will cause a big bang when destructed
 /*SmartPtr::SmartPtr(const SmartPtr& aCopy) {
@@ -9,39 +8,43 @@
 }*/
 
 //Move Constructor => ownership transfered
-SmartPtr::SmartPtr(SmartPtr&& aMove) {
+template <class T> SmartPtr<T>::SmartPtr(SmartPtr<T>&& aMove) {
   std::cout << "Call SmartPtr move constructor" << std::endl;
-  _foo = aMove._foo;
-  aMove._foo = nullptr;
+  _ptr = aMove._ptr;
+  aMove._ptr = nullptr;
 }
 
-SmartPtr::~SmartPtr(){
+template <class T> SmartPtr<T>::~SmartPtr(){
   std::cout << "Call SmartPtr destructor...";
-  if (_foo != nullptr) {
+  if (_ptr != nullptr) {
     std::cout << " foo is not null, it will be destructed" << std::endl;
-    delete _foo;
+    delete _ptr;
   } else {
     std::cout << " foo is null" << std::endl;
   }
 
 }
 
-SmartPtr& SmartPtr::operator= (SmartPtr&& aMove) {
+template <class T> SmartPtr<T>& SmartPtr<T>::operator= (SmartPtr<T>&& aMove) {
   std::cout << "Call SmartPtr move assignment operator" << std::endl;
-  if (_foo != nullptr) {
-    delete _foo;
+  if (_ptr != nullptr) {
+    delete _ptr;
   }
 
-  _foo = aMove._foo;
-  aMove._foo = nullptr;
+  _ptr = aMove._ptr;
+  aMove._ptr = nullptr;
   return *this;
 }
 
+/*
+ *
+
 std::string SmartPtr::getName() const {
   return _foo->getName();
-}
+}*/
 
-bool SmartPtr::operator!= (const SmartPtr& compare) const {
-  return (_foo != compare._foo);
+
+template <class T> bool SmartPtr<T>::operator!= (const SmartPtr<T>& compare) const {
+  return (_ptr != compare._ptr);
 }
 
