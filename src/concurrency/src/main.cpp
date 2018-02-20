@@ -1,6 +1,7 @@
 #include<atomic>
 #include<chrono>
 #include<functional>
+#include<future>
 #include<iostream>
 #include<thread>
 #include<vector>
@@ -60,6 +61,21 @@ void dotProductWithPartial(const std::vector<int>& iVectorL,
 }
 
 /*
+ * Dot Product written to use std::asynchronus
+ */
+
+int dotProductFut(const std::vector<int>& iVectorL,
+    const std::vector<int>& iVectorR,
+    int lowerBound,
+    int upperBound) {
+  int result=0;
+  for (int i = lowerBound; i < upperBound; i++) {
+    result += iVectorL[i] * iVectorR[i];
+  }
+  return result;
+}
+
+/*
  * Enum to call decide which function call
  */
 enum class DotProduct {
@@ -73,7 +89,7 @@ enum class DotProduct {
  * Test the dot Product in different case
  */
 template <typename T>
-void testDotProduct(const std::vector<int>& v1,
+void testDotProductThread(const std::vector<int>& v1,
     const std::vector<int>& v2,
     const std::vector<int>& limits,
     int nbr_threads,
@@ -116,6 +132,34 @@ void testDotProduct(const std::vector<int>& v1,
 
 
 
+void testDotProductAsynchronus(const std::vector<int>& v1,
+    const std::vector<int>& v2,
+    const std::vector<int>& limits,
+    int nbr_asynch){
+
+  int result(0);
+  std::vector<std::future<int>> futures;
+
+  auto t1 = std::chrono::system_clock::now();
+
+
+  for (int i = 0; i < nbr_asynch; i++) {
+    futures.emplace_back(std::async(std::launch::async, dotProductFut, std::cref(v1), std::cref(v2), limits[i], limits[i+1]));
+  }
+
+  for (auto& fut : futures) {
+    result += fut.get();
+  }
+
+  auto t2 = std::chrono::system_clock::now();
+
+  std::cout<< "Result: " << result << std::endl;
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+  std::cout << "Duration: " << duration <<  " ms" << std::endl << std::endl;
+
+  futures.clear();
+}
+
 
 int main() {
 
@@ -128,10 +172,11 @@ int main() {
   std::vector<DotProduct> algorithms {DotProduct::DotProduct, DotProduct::DotProductWithPartial};
 
   for (auto algorithm: algorithms) {
-    testDotProduct<int>(v1, v2, limits, nbr_threads, DotProduct::DotProduct);
-    testDotProduct<std::atomic<int>>(v1, v2, limits, nbr_threads, DotProduct::DotProduct);
+    testDotProductThread<int>(v1, v2, limits, nbr_threads, algorithm);
+    testDotProductThread<std::atomic<int>>(v1, v2, limits, nbr_threads, algorithm);
   }
 
+  testDotProductAsynchronus(v1, v2, limits, nbr_threads);
 
 
   return 0;
