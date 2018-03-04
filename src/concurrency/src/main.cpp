@@ -164,7 +164,7 @@ void testDotProductAsynchronus(const std::vector<int>& v1,
 int main() {
 
   int nbr_elements = 100000000;
-  int nbr_threads = std::thread::hardware_concurrency() ;
+  int nbr_threads = std::thread::hardware_concurrency();
 
   std::vector<int> v1(nbr_elements,1), v2(nbr_elements,2);
   std::vector<int> limits = bounds(nbr_threads, nbr_elements);
